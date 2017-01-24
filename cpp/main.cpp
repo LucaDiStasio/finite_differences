@@ -6,10 +6,10 @@
   Creation date: October 20th, 2015
     Last update: February 1st, 2016
 
-    Description: 
-          Input: 
+    Description:
+          Input:
          Output:
-         
+
     @author Luca Di Stasio
     @version 10.2015
 */
@@ -28,11 +28,11 @@ using namespace boost::program_options;
 int main(int argc, char** argv)
 {
   /*string filename = "finite_differences_weights.csv";
-  
+
   double arr[] = {-7.0,-6.0,-5.0,-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0};
   vector<double> xs(arr, arr+15);
-  
-  
+
+
   ofstream outfile(filename.c_str());
   outfile << "Order of Derivative, Order of Accuracy, ,Stencil" << endl;
   outfile << ",,";
@@ -44,15 +44,15 @@ int main(int argc, char** argv)
       outfile << ",";
     }
   }
-  
+
   int dev_eq;
   int num_nodes;
   vector<double> print_weights;
   vector<double> x;
   vector<double> weights;
-  
+
   double z = 0.0;
-  
+
   for(int dev = 0; dev<5; dev++){
     if(dev%2==0 && dev!=0){
       dev_eq = dev-1;
@@ -65,19 +65,19 @@ int main(int argc, char** argv)
       }else{
         num_nodes = xs.size();
       }
-      
+
       for(int i=(xs.size()-num_nodes)/2; i<(xs.size()-num_nodes)/2+num_nodes; i++){
         x.push_back(xs[i]);
       }
-      
+
       finitediff differences(dev,z,x);
       differences.compute_weights();
       weights = differences.provide_weights();
-      
+
       x.clear();
-      
+
       print_weights.resize(xs.size());
-      
+
       for(int i=0; i<weights.size(); i++){
         print_weights[(xs.size()-num_nodes)/2+i] = weights[i];
       }
@@ -90,16 +90,16 @@ int main(int argc, char** argv)
           outfile << ",";
         }
       }
-      
+
       weights.clear();
       print_weights.clear();
     }
   }*/
-  
+
   int M = 1;
-  
+
   double z = 0.0;
-  
+
   double left[] = {-2.0,-1.0,0.0};
   vector<double> left_xs(left, left+3);
   vector<double> left_fs;
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
   finitediff left_func_diff(M,left_fs,left_weights);
   left_func_diff.compute_derivative();
   double left_dev = left_func_diff.provide_derivative();
-  
+
   cout << endl;
   cout << "LEFT-SIDE FIRST ORDER DERIVATIVE" << endl;
   cout << endl;
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
     }
   }
   cout << "Derivative :" << left_dev << endl;
-      
+
   double right[] = {0.0,1.0,2.0};
   vector<double> right_xs(right, right+3);
   vector<double> right_fs;
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
   finitediff right_func_diff(M,right_fs,right_weights);
   right_func_diff.compute_derivative();
   double right_dev = right_func_diff.provide_derivative();
-  
+
   cout << endl;
   cout << "RIGHT-SIDE FIRST ORDER DERIVATIVE" << endl;
   cout << endl;
@@ -191,7 +191,7 @@ int main(int argc, char** argv)
     }
   }
   cout << "Derivative :" << right_dev << endl;
-  
+
   double centered[] = {-1.0,0.0,1.0};
   vector<double> centered_xs(centered, centered+3);
   vector<double> centered_fs;
@@ -205,7 +205,7 @@ int main(int argc, char** argv)
   finitediff centered_func_diff(M,centered_fs,centered_weights);
   centered_func_diff.compute_derivative();
   double centered_dev = centered_func_diff.provide_derivative();
-  
+
   cout << endl;
   cout << "CENTERED-SIDE FIRST ORDER DERIVATIVE" << endl;
   cout << endl;
@@ -237,7 +237,7 @@ int main(int argc, char** argv)
     }
   }
   cout << "Derivative :" << centered_dev << endl;
-  
-  
+
+
   return 0;
 }
