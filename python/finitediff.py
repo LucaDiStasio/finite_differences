@@ -36,27 +36,29 @@ xs;                      Vector of N grid points forming the stencil for the fin
 fs;                      Vector of N functional evaluation at the corresponding grid points
 weights;                 Vector of finite difference weights
 derivative;              Approximated value of derivative at location z
+
+Pseudo-code from
+"Generation of Finite Difference Formulas on Arbitrarily Spaced Grids", Bengt Fornberg.
+Mathematics of Computation; Volume 51 (1988), Number 184, Pages 699-706.
+see also
+Calculation of Weights in Finite Difference Formulas, Bengt Fornberg.
+SIAM Reviews; Volume 40 (1998), Number 3, Pages 685-691
+for a FORTRAN version of the algorithm.
+  
 '''
 
 from os.path import join
+import sys
+import matplotlib.pyplot as plt
+import numpy as np
 
 def computeWeigths(N,M,xs,z):
-'''
-//-----------------------------------------------------------------------------------------------//
-  Pseudo-code from
-  "Generation of Finite Difference Formulas on Arbitrarily Spaced Grids", Bengt Fornberg.
-  Mathematics of Computation; Volume 51 (1988), Number 184, Pages 699-706.
-  see also
-  Calculation of Weights in Finite Difference Formulas, Bengt Fornberg.
-  SIAM Reviews; Volume 40 (1998), Number 3, Pages 685-691
-  for a FORTRAN version of the algorithm.
-//-----------------------------------------------------------------------------------------------//
-'''
     delta = []              # delta_i,j ==> delta[i][j] 0<=i<N, 0<=j<M
     for i in range(0,N):
         row = []
         for i in range(0,M):
             row.append(0)
+        delta.append(row)
     mn = 0
     delta[0][0] = 1.0
     c1 = 1.0
@@ -82,13 +84,36 @@ def computeWeigths(N,M,xs,z):
         weights.append(delta[i][M])
     return weights
     
-def computeDerivative():
-derivative = 0;
-  for(unsigned int i=0; i<fs.size(); i++){
-    derivative += weights[i]*fs[i];
-  }
+def computeDerivative(fs,weights):
+    derivative = 0.0
+    for i,f in enumerate(fs):
+        derivative += weights[i]*f
+    return derivative
+
+def numDerive(N,M,xs,fs):
+    dfs = []
+    for n in range(0,N+1):
+        df = []
+        for x in xs:
+            df.append(computeDerivative(fs,computeWeigths(N,M,xs,x)))
+        dfs.append(df)
+    return dfs
   
 def main(argv):
+    xtrain = np.arange(1,10,0.1)
+    ytrain = xtrain**4 - xtrain**3 + 7
+    
+    stencilSize = 3
+    
+    devorderApprox = 1
+    
+    yapprox = numDerive(stencilSize,devorderApprox,xtrain,ytrain)
+    
+    plt.plot(xtrain,ytrain,'-k')
+    plt.plot(xtrain,yapprox[0],'.r')
+    plt.grid
+    plt.show()
+    
     
 if __name__ == "__main__":
     main(sys.argv[1:])
