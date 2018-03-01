@@ -68,24 +68,18 @@ def computeWeigths(N,M,xs,x0):
     #c4 = xs[0] - z;
     for n in range(1,N+1):
         c2 = 1.0
-        c5 = c4
-        c4 = xs[i] - z
-        mn = min(i,M)
-        for j in range(0,i):
-            c3 = xs[i] - xs[j]
-            c2 = c2*c3
-            if j==i-1:
-                for k in range(mn,0,-1):
-                    delta[i][k] = c1*(k*delta[i-1][k-1]-c5*delta[i-1][k])/c2
-                delta[i][0] = -c1*c5*delta[i-1][0]/c2
-            for k in range(mn,0,-1):
-                delta[j][k] = (c4*delta[j][k]-k*delta[j][k-1])/c3
-            delta[j][0] = c4*delta[j][0]/c3
+        #c5 = c4
+        #c4 = xs[i] - z
+        #mn = min(i,M)
+        for nu in range(0,n+1):
+            c3 = xs[n] - xs[nu]
+            c2 *= c3
+            for m in range(0,min(n,M)+1):
+                delta[m][n][nu] = ((xs[n]-x0)*delta[m][n-1][nu]-m*delta[m-1][n-1][nu])/c3
+        for m in range(0,min(n,M)+1):
+            delta[m][n][n] = c1*(m*delta[m-1][n-1][n-1]-(xs[n-1]-x0)*delta[m][n-1][n-1])/c2
         c1 = c2
-    weights = []
-    for i in range(0,N):
-        weights.append(delta[i][M])
-    return weights
+
 
 def computeDerivative(fs,weights):
     derivative = 0.0
@@ -103,19 +97,14 @@ def numDerive(N,M,xs,fs):
     return dfs
 
 def main(argv):
-    xtrain = np.arange(1,10,0.1)
-    ytrain = xtrain**4 - xtrain**3 + 7
 
-    stencilSize = 3
+    M = 4
+    N = 8
+    
+    alphas = [-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0]
 
-    devorderApprox = 1
+    computeWeigths(N,4,alphas,0.0)
 
-    yapprox = numDerive(stencilSize,devorderApprox,xtrain,ytrain)
-
-    plt.plot(xtrain,ytrain,'-k')
-    plt.plot(xtrain,yapprox[0],'.r')
-    plt.grid
-    plt.show()
 
 
 if __name__ == "__main__":
