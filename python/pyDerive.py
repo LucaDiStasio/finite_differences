@@ -73,11 +73,13 @@ def computeWeigths(N,M,xs,x0):
         #mn = min(i,M)
         for nu in range(0,n+1):
             c3 = xs[n] - xs[nu]
-            c2 *= c3
+            if c3!=0:
+                c2 *= c3
+                for m in range(0,min(n,M)+1):
+                    delta[m][n][nu] = ((xs[n]-x0)*delta[m][n-1][nu]-m*delta[m-1][n-1][nu])/c3
+        if c2!=0:
             for m in range(0,min(n,M)+1):
-                delta[m][n][nu] = ((xs[n]-x0)*delta[m][n-1][nu]-m*delta[m-1][n-1][nu])/c3
-        for m in range(0,min(n,M)+1):
-            delta[m][n][n] = c1*(m*delta[m-1][n-1][n-1]-(xs[n-1]-x0)*delta[m][n-1][n-1])/c2
+                delta[m][n][n] = c1*(m*delta[m-1][n-1][n-1]-(xs[n-1]-x0)*delta[m][n-1][n-1])/c2
         c1 = c2
 
 
@@ -100,7 +102,7 @@ def main(argv):
 
     M = 4
     N = 8
-    
+
     alphas = [-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0]
 
     computeWeigths(N,4,alphas,0.0)
