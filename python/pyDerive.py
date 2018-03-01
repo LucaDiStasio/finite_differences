@@ -51,8 +51,9 @@ from os.path import join
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+from fractions import Fraction
 
-def computeWeigths(N,M,xs,x0):
+def computeWeights(N,M,xs,x0):
     delta = []              # delta^m_n,n ==> delta[m][n][n] 0<=m<M+1, 0<=n<N+1, 0<=n<N+1
     for m in range(0,M+1):
         matrix = []
@@ -81,6 +82,7 @@ def computeWeigths(N,M,xs,x0):
             for m in range(0,min(n,M)+1):
                 delta[m][n][n] = c1*(m*delta[m-1][n-1][n-1]-(xs[n-1]-x0)*delta[m][n-1][n-1])/c2
         c1 = c2
+    return delta
 
 
 def computeDerivative(fs,weights):
@@ -98,16 +100,60 @@ def numDerive(N,M,xs,fs):
         dfs.append(df)
     return dfs
 
-def main(argv):
+#def main(argv):
 
-    M = 4
-    N = 8
+M = 4
 
-    alphas = [-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0]
+alpha1 = [-1.0,0.0,1.0]
+alpha2 = [-2.0,-1.0,0.0,1.0,2.0]
+alpha3 = [-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0]
+alpha4 = [-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0]
 
-    computeWeigths(N,4,alphas,0.0)
+weight1 = computeWeights(len(alpha1)-1,4,alpha1,0.0)
+weight2 = computeWeights(len(alpha2)-1,4,alpha2,0.0)
+weight3 = computeWeights(len(alpha3)-1,4,alpha3,0.0)
+weight4 = computeWeights(len(alpha4)-1,4,alpha4,0.0)
 
+for m,matrix in enumerate(weight1):
+    for n,row in enumerate(matrix):
+        for nu,value in enumerate(row):
+            try:
+                weight1[m][n][nu] = str(Fraction(value).limit_denominator())
+            except Exception:
+                weight1[m][n][nu] = str(value)
+                sys.exc_clear()
+for m,matrix in enumerate(weight2):
+    for n,row in enumerate(matrix):
+        for nu,value in enumerate(row):
+            try:
+                weight2[m][n][nu] = str(Fraction(value).limit_denominator())
+            except Exception:
+                weight2[m][n][nu] = str(value)
+                sys.exc_clear()
+for m,matrix in enumerate(weight3):
+    for n,row in enumerate(matrix):
+        for nu,value in enumerate(row):
+            try:
+                weight3[m][n][nu] = str(Fraction(value).limit_denominator())
+            except Exception:
+                weight3[m][n][nu] = str(value)
+                sys.exc_clear()
+for m,matrix in enumerate(weight4):
+    for n,row in enumerate(matrix):
+        for nu,value in enumerate(row):
+            try:
+                weight4[m][n][nu] = str(Fraction(value).limit_denominator())
+            except Exception:
+                weight4[m][n][nu] = str(value)
+                sys.exc_clear()
 
+print(str(weight1[1][-1])+'\n'+str(weight2[1][-1])+'\n'+str(weight3[1][-1])+'\n'+str(weight4[1][-1]))
 
-if __name__ == "__main__":
-    main(sys.argv[1:])
+print(str(weight1[2][-1])+'\n'+str(weight2[2][-1])+'\n'+str(weight3[2][-1])+'\n'+str(weight4[2][-1]))
+
+print(str(weight1[3][-1])+'\n'+str(weight2[3][-1])+'\n'+str(weight3[3][-1])+'\n'+str(weight4[3][-1]))
+
+print(str(weight1[4][-1])+'\n'+str(weight2[4][-1])+'\n'+str(weight3[4][-1])+'\n'+str(weight4[4][-1]))
+
+#if __name__ == "__main__":
+#    main(sys.argv[1:])
