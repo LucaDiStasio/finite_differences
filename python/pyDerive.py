@@ -104,15 +104,26 @@ def numDerive(N,M,xs,fs):
 
 M = 4
 
+alpha = [0,1,2,3,4,5,6,7,8]
 alpha1 = [-1.0,0.0,1.0]
 alpha2 = [-2.0,-1.0,0.0,1.0,2.0]
 alpha3 = [-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0]
 alpha4 = [-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0]
 
+weight = computeWeights(len(alpha)-1,4,alpha,0.0)
 weight1 = computeWeights(len(alpha1)-1,4,alpha1,0.0)
 weight2 = computeWeights(len(alpha2)-1,4,alpha2,0.0)
 weight3 = computeWeights(len(alpha3)-1,4,alpha3,0.0)
 weight4 = computeWeights(len(alpha4)-1,4,alpha4,0.0)
+
+for m,matrix in enumerate(weight):
+    for n,row in enumerate(matrix):
+        for nu,value in enumerate(row):
+            try:
+                weight[m][n][nu] = str(Fraction(value).limit_denominator())
+            except Exception:
+                weight[m][n][nu] = str(value)
+                sys.exc_clear()
 
 for m,matrix in enumerate(weight1):
     for n,row in enumerate(matrix):
@@ -147,13 +158,16 @@ for m,matrix in enumerate(weight4):
                 weight4[m][n][nu] = str(value)
                 sys.exc_clear()
 
-print(str(weight1[1][-1])+'\n'+str(weight2[1][-1])+'\n'+str(weight3[1][-1])+'\n'+str(weight4[1][-1]))
+for wset in weight:
+    print(str(wset))
 
-print(str(weight1[2][-1])+'\n'+str(weight2[2][-1])+'\n'+str(weight3[2][-1])+'\n'+str(weight4[2][-1]))
+#print(str(weight1[1][-1])+'\n'+str(weight2[1][-1])+'\n'+str(weight3[1][-1])+'\n'+str(weight4[1][-1]))
 
-print(str(weight1[3][-1])+'\n'+str(weight2[3][-1])+'\n'+str(weight3[3][-1])+'\n'+str(weight4[3][-1]))
+#print(str(weight1[2][-1])+'\n'+str(weight2[2][-1])+'\n'+str(weight3[2][-1])+'\n'+str(weight4[2][-1]))
 
-print(str(weight1[4][-1])+'\n'+str(weight2[4][-1])+'\n'+str(weight3[4][-1])+'\n'+str(weight4[4][-1]))
+#print(str(weight1[3][-1])+'\n'+str(weight2[3][-1])+'\n'+str(weight3[3][-1])+'\n'+str(weight4[3][-1]))
+
+#print(str(weight1[4][-1])+'\n'+str(weight2[4][-1])+'\n'+str(weight3[4][-1])+'\n'+str(weight4[4][-1]))
 
 #if __name__ == "__main__":
 #    main(sys.argv[1:])
