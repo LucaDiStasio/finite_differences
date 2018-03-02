@@ -46,12 +46,8 @@ SIAM Reviews; Volume 40 (1998), Number 3, Pages 685-691
 for a FORTRAN version of the algorithm.
 
 '''
-
-from os.path import join
 import sys
-import matplotlib.pyplot as plt
-import numpy as np
-from fractions import Fraction
+#from fractions import Fraction #to format decimals into fractions
 
 def computeWeights(N,M,xs,x0):
     delta = []              # delta^m_n,n ==> delta[m][n][n] 0<=m<M+1, 0<=n<N+1, 0<=n<N+1
