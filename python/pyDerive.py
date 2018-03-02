@@ -63,15 +63,10 @@ def computeWeights(N,M,xs,x0):
                 row.append(0.0)
             matrix.append(row)
         delta.append(matrix)
-    mn = 0 # !!!! check this !!!!
     delta[0][0][0] = 1.0
     c1 = 1.0
-    #c4 = xs[0] - z;
     for n in range(1,N+1):
         c2 = 1.0
-        #c5 = c4
-        #c4 = xs[i] - z
-        #mn = min(i,M)
         for nu in range(0,n+1):
             c3 = xs[n] - xs[nu]
             if c3!=0:
@@ -85,7 +80,7 @@ def computeWeights(N,M,xs,x0):
     return delta
 
 
-def computeDerivative(fs,weights):
+def computeDerivativeAtPoint(fs,weights):
     derivative = 0.0
     for i,f in enumerate(fs):
         derivative += weights[i]*f
