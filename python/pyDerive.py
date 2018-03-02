@@ -80,10 +80,12 @@ def computeWeights(N,M,xs,x0):
     return delta
 
 
-def computeDerivativeAtPoint(fs,weights):
+def computeDerivativeAtPoint(M,x0,stencil,fs):
+    allWeights = computeWeights(len(stencil)-1,M,stencil,x0)
+    weights = allWeights[-1][-1]
     derivative = 0.0
-    for i,f in enumerate(fs):
-        derivative += weights[i]*f
+    for v,value in enumerate(fs):
+        derivative += weights[v]*value
     return derivative
 
 def numDerive(N,M,xs,fs):
@@ -95,74 +97,35 @@ def numDerive(N,M,xs,fs):
         dfs.append(df)
     return dfs
 
-#def main(argv):
+def ftest(xs):
+    ys = []
+    dys = []
+    d2ys = []
+    d3ys = []
+    d4ys = []
+    for x in xs:
+        ys.append(3.0*x**4-7.0*x**3+x**2-8.0)
+        dys.append(12.0*x**3-21.0*x**2+2.0*x)
+        d2ys.append(36.0*x**2-42.0*x+2)
+        d3ys.append(72.0*x-42.0)
+        d4ys.append(72.0)
+    return ys, dys, d2ys, d3ys, d4ys
 
-M = 4
+def main(argv):
 
-alpha = [0,1,2,3,4,5,6,7,8]
-alpha1 = [-1.0,0.0,1.0]
-alpha2 = [-2.0,-1.0,0.0,1.0,2.0]
-alpha3 = [-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0]
-alpha4 = [-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0]
+    alpha = [-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0]
 
-weight = computeWeights(len(alpha)-1,4,alpha,0.0)
-weight1 = computeWeights(len(alpha1)-1,4,alpha1,0.0)
-weight2 = computeWeights(len(alpha2)-1,4,alpha2,0.0)
-weight3 = computeWeights(len(alpha3)-1,4,alpha3,0.0)
-weight4 = computeWeights(len(alpha4)-1,4,alpha4,0.0)
+    ys, dys, d2ys, d3ys, d4ys = ftest(alpha)
 
-for m,matrix in enumerate(weight):
-    for n,row in enumerate(matrix):
-        for nu,value in enumerate(row):
-            try:
-                weight[m][n][nu] = str(Fraction(value).limit_denominator())
-            except Exception:
-                weight[m][n][nu] = str(value)
-                sys.exc_clear()
+    y0, dy0, d2y0, d3y0, d4y0 = ftest([0.5])
 
-for m,matrix in enumerate(weight1):
-    for n,row in enumerate(matrix):
-        for nu,value in enumerate(row):
-            try:
-                weight1[m][n][nu] = str(Fraction(value).limit_denominator())
-            except Exception:
-                weight1[m][n][nu] = str(value)
-                sys.exc_clear()
-for m,matrix in enumerate(weight2):
-    for n,row in enumerate(matrix):
-        for nu,value in enumerate(row):
-            try:
-                weight2[m][n][nu] = str(Fraction(value).limit_denominator())
-            except Exception:
-                weight2[m][n][nu] = str(value)
-                sys.exc_clear()
-for m,matrix in enumerate(weight3):
-    for n,row in enumerate(matrix):
-        for nu,value in enumerate(row):
-            try:
-                weight3[m][n][nu] = str(Fraction(value).limit_denominator())
-            except Exception:
-                weight3[m][n][nu] = str(value)
-                sys.exc_clear()
-for m,matrix in enumerate(weight4):
-    for n,row in enumerate(matrix):
-        for nu,value in enumerate(row):
-            try:
-                weight4[m][n][nu] = str(Fraction(value).limit_denominator())
-            except Exception:
-                weight4[m][n][nu] = str(value)
-                sys.exc_clear()
+    numDev = computeDerivativeAtPoint(2,0.5,alpha,ys)
 
-for wset in weight:
-    print(str(wset))
+    print("{:10.15f}".format(numDev))
+    print("{:10.15f}".format(d2y0[0]))
 
-#print(str(weight1[1][-1])+'\n'+str(weight2[1][-1])+'\n'+str(weight3[1][-1])+'\n'+str(weight4[1][-1]))
 
-#print(str(weight1[2][-1])+'\n'+str(weight2[2][-1])+'\n'+str(weight3[2][-1])+'\n'+str(weight4[2][-1]))
 
-#print(str(weight1[3][-1])+'\n'+str(weight2[3][-1])+'\n'+str(weight3[3][-1])+'\n'+str(weight4[3][-1]))
 
-#print(str(weight1[4][-1])+'\n'+str(weight2[4][-1])+'\n'+str(weight3[4][-1])+'\n'+str(weight4[4][-1]))
-
-#if __name__ == "__main__":
-#    main(sys.argv[1:])
+if __name__ == "__main__":
+    main(sys.argv[1:])
