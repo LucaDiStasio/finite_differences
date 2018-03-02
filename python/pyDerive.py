@@ -88,15 +88,6 @@ def computeDerivativeAtPoint(M,x0,stencil,fs):
         derivative += weights[v]*value
     return derivative
 
-def numDerive(N,M,xs,fs):
-    dfs = []
-    for n in range(0,N+1):
-        df = []
-        for x in xs:
-            df.append(computeDerivative(fs,computeWeigths(N,M,xs,x)))
-        dfs.append(df)
-    return dfs
-
 def ftest(xs):
     ys = []
     dys = []
@@ -119,10 +110,10 @@ def main(argv):
 
     y0, dy0, d2y0, d3y0, d4y0 = ftest([0.5])
 
-    numDev = computeDerivativeAtPoint(2,0.5,alpha,ys)
+    numDev = computeDerivativeAtPoint(0,0.5,alpha,ys)
 
     print("{:10.15f}".format(numDev))
-    print("{:10.15f}".format(d2y0[0]))
+    print("{:10.15f}".format(y0[0]))
 
 
 
